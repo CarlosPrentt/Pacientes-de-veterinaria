@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Error from './Error';
 
-const Formulario = ({ pacientes, setPacientes, paciente }) => {
+const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
     // Siempre la variable se modifica por la función, en este caso setNombre es la función modificadora
     const [ nombre, setNombre ] = useState('');
     const [ propietario, setPropietario ] = useState('');
@@ -11,7 +11,16 @@ const Formulario = ({ pacientes, setPacientes, paciente }) => {
 
     const [ error, setError ] = useState(false)
 
-    
+    useEffect(() => {
+        //Object.keys es para saber si un objeto tiene algo
+        if( Object.keys(paciente).length > 0 ){
+            setNombre(paciente.nombre)
+            setPropietario(paciente.propietario)
+            setEmail(paciente.email)
+            setFecha(paciente.fecha)
+            setSintomas(paciente.sintomas)
+        }
+    }, [paciente])
 
     // Esto es para generar un id único
     const generarId = () => {
@@ -41,11 +50,28 @@ const Formulario = ({ pacientes, setPacientes, paciente }) => {
             email,
             fecha,
             sintomas,
-            id: generarId()
         }
 
-        // Con este generamos un nuevo arreglo con copia de pacientes para no modificar el arreglo original y así podemos registrar más de uno
-        setPacientes([ ...pacientes, objetoPaciente ])
+        //Cuando se le da al btn aquí sabremos si estamos agregando paciente o editando paciente
+        if( paciente.id ) {
+            //Editando el registro, objeto paciente es el actualizado y paciente el no actualizado
+            objetoPaciente.id = paciente.id
+            console.log(objetoPaciente)
+            console.log(paciente)
+
+            const pacientesActualizados = pacientes.map( pacienteState => pacienteState.id === paciente.id ? objetoPaciente : pacienteState )
+
+            setPacientes(pacientesActualizados)
+            setPaciente({})
+
+        } else {
+            //Nuevo registro
+            // Con este generamos un nuevo arreglo con copia de pacientes para no modificar el arreglo original y así podemos registrar más de uno
+            objetoPaciente.id = generarId();
+            setPacientes([ ...pacientes, objetoPaciente ]);
+        }
+
+        
 
         //Reiniciar el form para escribir un nuevo registro, vuelven a un string vacío
         setNombre('')
@@ -135,7 +161,8 @@ const Formulario = ({ pacientes, setPacientes, paciente }) => {
             <input 
                 type="submit"
                 className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-                value='Agregar Paciente'
+                //Para cambiar que diga editar si hay un id porque el id solo se coloca cuando se da click en editar
+                value={ paciente.id ? 'Editar paciente' : 'Agregar paciente' }
             />
         </form>
     </div>

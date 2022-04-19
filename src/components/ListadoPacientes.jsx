@@ -6,6 +6,7 @@ const ListadoPacientes = ({ pacientes, setPaciente }) => {
   //Para saber cuánto mide un arreglo o si tiene algo dentro
   // console.log(pacientes && pacientes.length)
 
+  
   return (
     <div className="md:w-1/2 lg:w-3/5 md:h-screen overflow-y-scroll">
       {/* En este ternario cambiamos el texto dependiendo si hay o no pacientes */}

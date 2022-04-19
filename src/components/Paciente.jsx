@@ -1,4 +1,4 @@
-const Paciente = ({paciente}) => {
+const Paciente = ({paciente, setPaciente}) => {
 // Llamamos a paciente de la prop que pasamos en listado paciente y hacemos destructuring para sacar cada información
     const {nombre} = paciente;
     const {propietario} = paciente;
